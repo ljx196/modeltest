@@ -2,6 +2,11 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import io
+from torchtext.datasets import WikiText2
+from torchtext.data.utils import get_tokenizer
+from collections import Counter
+from torchtext.vocab import Vocab
 
 
 class TransformerModel(nn.Module):
@@ -16,7 +21,6 @@ class TransformerModel(nn.Module):
         self.encoder = nn.Embedding(ntoken, ninp)
         self.ninp = ninp
         self.decoder = nn.Linear(ninp, ntoken)
-
         self.init_weights()
 
     def generate_square_subsequent_mask(self, sz):
@@ -57,5 +61,36 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
 
 
+def data_process(raw_text_iter):
+    data = [torch.tensor([vocab[token] for token in tokenizer(item)],
+                         dtype=torch.long) for item in raw_text_iter]
+    return torch.cat(tuple(filter(lambda t: t.numel() > 0, data)))
+
+
+def batchify(data, bsz, device):
+    nbatch = data.size(0) // bsz
+    data = data.narrow(0, 0, nbatch * bsz)
+    data = data.view(bsz, -1).t().contiguous()
+    return data.to(device)
+
+
 if __name__ == '__main__':
-    print('Hello World!')
+    train_iter = WikiText2(split='train')
+    tokenizer = get_tokenizer('basic_english')
+    counter = Counter()
+    for line in train_iter:
+        counter.update(tokenizer(line))
+    vocab = Vocab(counter)
+
+    train_iter, val_iter, test_iter = WikiText2()
+    train_data = data_process(train_iter)
+    val_data = data_process(val_iter)
+    test_data = data_process(test_iter)
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    batch_size = 20
+    eval_batch_size = 10
+    train_data = batchify(train_data, batch_size, device)
+    val_data = batchify(val_data, batch_size, device)
+    test_data = batchify(test_data, eval_batch_size, device)
