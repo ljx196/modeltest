@@ -104,13 +104,12 @@ def train():
         if batch % log_interval == 0 and batch > 0:
             cur_loss = total_loss / log_interval
             elapsed = time.time() - start_time
-            print('| epoch {:3d} | {:5d}/{:5d} batches| '
-                  'lr {:0.2.2f} | ms/batch {:5.2f} | '
-                  'loss {:5.2f} | ppl {:8.2f}'.format(epoch, batch,
-                                                      len(train_data) // bptt,
-                                                      scheduler.get_last_lr()[0],
-                                                      elapsed * 1000 / log_interval,
-                                                      cur_loss, math.exp(cur_loss)))
+            print('| epoch {:3d} | {:5d}/{:5d} batches | '
+                  'lr {:02.2f} | ms/batch {:5.2f} | '
+                  'loss {:5.2f} | ppl {:8.2f}'.format(
+                epoch, batch, len(train_data) // bptt, scheduler.get_last_lr()[0],
+                              elapsed * 1000 / log_interval,
+                cur_loss, math.exp(cur_loss)))
             total_loss = 0
             start_time = time.time()
 
@@ -165,13 +164,13 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
     lr = 5.0
-    optimizer = torch.optim.SGD(model.parameters, lr=lr)
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
 
     best_val_loss = float("inf")
     epochs = 3
     best_model = None
-
+    print("start training: ")
     for epoch in range(1, epochs):
         epoch_start_time = time.time()
         train()
