@@ -4,7 +4,7 @@ from .multi_head import MultiHeadAttention
 from .utils import SubLayerConnetion, PositionwiseFeedForward
 
 
-class TranformerBlock(nn.Module):
+class TransformerBlock(nn.Module):
 
     def __init__(self, hidden, attn_heads, feed_forward_hidden, dropout):
         super().__init__()
