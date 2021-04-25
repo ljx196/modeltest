@@ -1,7 +1,7 @@
 import torch.nn as nn
 
-from .multi_head import MultiHeadAttention
-from .utils import SubLayerConnetion, PositionwiseFeedForward
+from model.model.attention.multi_head import MultiHeadAttention
+from .utils import SublayerConnection, PositionwiseFeedForward
 
 
 class TransformerBlock(nn.Module):
@@ -10,8 +10,8 @@ class TransformerBlock(nn.Module):
         super().__init__()
         self.attention = MultiHeadAttention(h=attn_heads, d_model=hidden)
         self.feed_forward = PositionwiseFeedForward(d_model=hidden, d_ff=feed_forward_hidden)
-        self.input_sublayer = SubLayerConnetion(size=hidden, dropout=dropout)
-        self.output_sublayer = SubLayerConnetion(size=hidden, dropout=dropout)
+        self.input_sublayer = SublayerConnection(size=hidden, dropout=dropout)
+        self.output_sublayer = SublayerConnection(size=hidden, dropout=dropout)
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x, mask):
