@@ -164,7 +164,8 @@ class WordVocab(Vocab):
     @staticmethod
     def load_vocab(vocab_path: str) -> 'WordVocab':
         with open(vocab_path, "rb") as f:
-            return pickle.load(f)
+            wordvocab_ = pickle.load(f)
+            return wordvocab_
 
 
 def build():
@@ -194,9 +195,11 @@ if __name__ == '__main__':
     # parser.add_argument("-e", "--encoding", type=str, default="utf-8")
     # parser.add_argument("-m", "--min_freq", type=int, default=1)
     # args = parser.parse_args()
-
-    with open(r'C:\WorkSpace\expressions-synthetic\equaldataout.txt', "r", encoding='utf-8') as f:
-        vocab = WordVocab(f, min_freq=1)
-
-    print("VOCAB SIZE:", len(vocab))
-    vocab.save_vocab(r'C:\WorkSpace\expressions-synthetic\equaldataout.small')
+    #
+    # with open(r'C:\WorkSpace\expressions-synthetic\equaldataout.txt', "r", encoding='utf-8') as f:
+    #     vocab = WordVocab(f, min_freq=1)
+    #
+    # print("VOCAB SIZE:", len(vocab))
+    # vocab.save_vocab(r'C:\WorkSpace\expressions-synthetic\equaldataout.small')
+    vo = WordVocab.load_vocab(r'C:\WorkSpace\expressions-synthetic\equaldataout.small')
+    print('')

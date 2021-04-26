@@ -1,5 +1,5 @@
 import torch.nn as nn
-from model.model.attention.attention import Attention
+from .attention import Attention
 
 
 class MultiHeadAttention(nn.Module):

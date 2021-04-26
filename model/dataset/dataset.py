@@ -37,7 +37,7 @@ class BERTDataset(Dataset):
     def __getitem__(self, item):
         t1, t2, is_next_label = self.random_sent(item)
         t1_random, t1_label = self.random_word(t1)
-        if is_next_label is 1:
+        if is_next_label == 1:
             t2_random, t2_label = self.random_word(t2)
         else:
             t2_random, t2_label = t1_random, t1_label
@@ -96,7 +96,7 @@ class BERTDataset(Dataset):
         t1, t2, label = self.get_corpus_line(index)
 
         # output_text, label(isNotNext:0, isNext:1)
-        if label is '1':
+        if label == '1':
             return t1, t2, 1
         else:
             return t1, t2, 0

@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 from .transformer import TransformerBlock
-from model.model.embedding import BERTEmbedding
+from .embedding import BERTEmbedding
 
 
 class BERT(nn.Module):

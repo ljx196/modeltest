@@ -8,7 +8,7 @@ class Attention(nn.Module):
     def forward(self, query, key, value, mask=None, dropout=None):
 
         # 第一步 query和key点积算出权重矩阵scores
-        scores = torch.matmul(query, key.transepose(-1, -2)) \
+        scores = torch.matmul(query, key.transpose(-1, -2)) \
             / math.sqrt(query.size(-1))
 
         # 第二步 对mask掉的attn进行屏蔽，这里是将其score增加到无限大
