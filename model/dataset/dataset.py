@@ -37,7 +37,10 @@ class BERTDataset(Dataset):
     def __getitem__(self, item):
         t1, t2, is_next_label = self.random_sent(item)
         t1_random, t1_label = self.random_word(t1)
-        t2_random, t2_label = self.random_word(t2)
+        if is_next_label is 1:
+            t2_random, t2_label = self.random_word(t2)
+        else:
+            t2_random, t2_label = t1_random, t1_label
 
         # [CLS] tag = SOS tag, [SEP] tag = EOS tag
         t1 = [self.vocab.sos_index] + t1_random + [self.vocab.eos_index]
@@ -90,17 +93,17 @@ class BERTDataset(Dataset):
         return tokens, output_label
 
     def random_sent(self, index):
-        t1, t2 = self.get_corpus_line(index)
+        t1, t2, label = self.get_corpus_line(index)
 
         # output_text, label(isNotNext:0, isNext:1)
-        if random.random() > 0.5:
+        if label is '1':
             return t1, t2, 1
         else:
-            return t1, self.get_random_line(), 0
+            return t1, t2, 0
 
     def get_corpus_line(self, item):
         if self.on_memory:
-            return self.lines[item][0], self.lines[item][1]
+            return self.lines[item][0], self.lines[item][1], self.lines[item][2]
         else:
             line = self.file.__next__()
             if line is None:
